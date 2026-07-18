@@ -1,11 +1,17 @@
-﻿from gtts import gTTS
+from gtts import gTTS
 import os
 
-class VoiceManager:
+class AdministradorDeVoz:
     def __init__(self):
+        # Inicialización de la clase
         pass
 
-    def speak(self, text: str):
-        tts = gTTS(text=text, lang='es')
-        tts.save('audio_mau.mp3')
-        print('Mau está hablando...')
+    def hablar(self, texto: str):
+        try:
+            # Generamos el audio con gTTS
+            tts = gTTS(text=texto, lang='es')
+            # Guardamos el archivo
+            tts.save('audio_mau.mp3')
+            print('Mau está hablando...')
+        except Exception as e:
+            print(f"Error al generar el audio: {e}")
