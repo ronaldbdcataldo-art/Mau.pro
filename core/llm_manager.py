@@ -1,23 +1,29 @@
 import os
-import google.generativeai as genai
 from dotenv import load_dotenv
+import google.generativeai as genai
 
+# Cargar variables de entorno
 load_dotenv()
 
-class LLMManager:
+# Configuración
+MODELO_POR_DEFECTO = 'gemini-1.5-flash'
+
+class GerenteDeLLM:
     def __init__(self):
         # Lee la clave desde el .env
-        api_key = os.getenv('GEMINI_API_KEY')
-        if not api_key:
-            raise ValueError("¡Error! No encontré la GEMINI_API_KEY en el .env")
+        self.clave_api = os.getenv('GEMINI_API_KEY')
         
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
+        if not self.clave_api:
+            raise ValueError("¡Error! No encontré la GEMINI_API_KEY en el archivo .env")
 
-    async def generate_response(self, mode: str, topic: str) -> str:
-        prompt = f"Eres Mau, un personaje tierno. Modo: {mode}. Tema: {topic}. Responde breve."
+        genai.configure(api_key=self.clave_api)
+        self.modelo = genai.GenerativeModel(MODELO_POR_DEFECTO)
+
+    async def generar_respuesta(self, modo: str, tema: str) -> str:
+        prompt = f"Eres Mau, un personaje tierno. Modo: {modo}. Tema: {tema}."
+        
         try:
-            response = await self.model.generate_content_async(prompt)
-            return response.text
+            respuesta = await self.modelo.generate_content_async(prompt)
+            return respuesta.text
         except Exception as e:
             return f"Mau tuvo un error: {e}"
